@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { getInsights } from '../services/insights'; 
+import { getInsights } from '../services/insights';
 
 
 const MOOD_EMOJIS = {
@@ -14,21 +14,21 @@ const MOOD_EMOJIS = {
 
 
 const getMoodColor = (moodName) => {
-    switch(moodName) {
-      case 'rad': return '#00E676';
-      case 'good': return '#AEEA00';
-      case 'meh': return '#64B5F6';
-      case 'bad': return '#FF8C00';
-      case 'awful': return '#FF1744';
-      default: return '#555';
-    }
+  switch (moodName) {
+    case 'rad': return '#00E676';
+    case 'good': return '#AEEA00';
+    case 'meh': return '#64B5F6';
+    case 'bad': return '#FF8C00';
+    case 'awful': return '#FF1744';
+    default: return '#555';
+  }
 }
 
 
 const MoodTrendPlaceholder = ({ moodTrendData }) => {
- 
-  const displayData = moodTrendData.slice(-7); 
-  
+
+  const displayData = moodTrendData.slice(-7);
+
   if (displayData.length === 0) {
     return (
       <View style={styles.chartPlaceholder}>
@@ -36,12 +36,12 @@ const MoodTrendPlaceholder = ({ moodTrendData }) => {
       </View>
     );
   }
-  
+
   return (
     <View style={styles.chartContainer}>
       <Text style={styles.chartTitle}>Mood Trend (Last {displayData.length} Entries)</Text>
       <View style={styles.trendRow}>
-       
+
         {displayData.map((data, index) => (
           <View key={index} style={styles.dayColumn}>
             <Text style={{ fontSize: 24, marginBottom: 4 }}>{MOOD_EMOJIS[data.moodName]}</Text>
@@ -54,20 +54,20 @@ const MoodTrendPlaceholder = ({ moodTrendData }) => {
 };
 
 
-export default function StatsScreen() {
+export default function StatsScreen({ navigation }) {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [timeframe, setTimeframe] = useState(7); 
+  const [timeframe, setTimeframe] = useState(7);
 
 
   const fetchInsights = useCallback(async (days) => {
     setLoading(true);
-    const data = await getInsights(days); 
+    const data = await getInsights(days);
     setInsights(data);
     setLoading(false);
   }, []);
 
- 
+
   useEffect(() => {
     fetchInsights(timeframe);
   }, [timeframe, fetchInsights]);
@@ -75,31 +75,37 @@ export default function StatsScreen() {
   if (loading) {
     return <View style={styles.loadingContainer}><ActivityIndicator size="large" color="#00E676" /></View>;
   }
-  
+
   const { mostCommonMood, mostCommonTag, summaryMessage, moodTrendData, timePeriod } = insights;
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.headerTitle}>Mood Insights</Text>
-      
-     
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#FFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Mood Insights</Text>
+        <View style={{ width: 24 }} />
+      </View>
+
+
       <View style={styles.timeSelector}>
-        <TouchableOpacity 
-          style={[styles.timeBtn, timeframe === 7 && styles.timeBtnActive]} 
+        <TouchableOpacity
+          style={[styles.timeBtn, timeframe === 7 && styles.timeBtnActive]}
           onPress={() => setTimeframe(7)}
         >
           <Text style={timeframe === 7 ? styles.timeTextActive : styles.timeText}>Last 7 Days</Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={[styles.timeBtn, timeframe === 30 && styles.timeBtnActive]} 
+
+        <TouchableOpacity
+          style={[styles.timeBtn, timeframe === 30 && styles.timeBtnActive]}
           onPress={() => setTimeframe(30)}
-          >
+        >
           <Text style={timeframe === 30 ? styles.timeTextActive : styles.timeText}>Last 30 Days</Text>
         </TouchableOpacity>
       </View>
-      
-     
+
+
       <View style={styles.summaryCard}>
         <Ionicons name="bulb-outline" size={24} color="#2FE0C2" />
         <Text style={styles.summaryText}>
@@ -107,20 +113,20 @@ export default function StatsScreen() {
         </Text>
       </View>
 
-   
+
       <MoodTrendPlaceholder moodTrendData={moodTrendData} />
 
       <Text style={styles.sectionTitle}>Key Statistics ({timePeriod} Days)</Text>
-      
-    
+
+
       <View style={styles.statsRow}>
-        
+
 
         <View style={styles.statCard}>
           <Text style={styles.statLabel}>Most Common Mood</Text>
           <View style={styles.statValueRow}>
             <View style={[styles.moodStatCircle, { borderColor: getMoodColor(mostCommonMood.name) }]}>
-               <Text style={{ fontSize: 24 }}>{MOOD_EMOJIS[mostCommonMood.name]}</Text>
+              <Text style={{ fontSize: 24 }}>{MOOD_EMOJIS[mostCommonMood.name]}</Text>
             </View>
             <View>
               <Text style={styles.statValue}>{mostCommonMood.name.toUpperCase()}</Text>
@@ -133,7 +139,7 @@ export default function StatsScreen() {
         <View style={styles.statCard}>
           <Text style={styles.statLabel}>Most Frequent Tag</Text>
           <View style={styles.statValueRow}>
-             <Ionicons name="bookmark" size={30} color="#00E676" style={{marginRight: 10}}/>
+            <Ionicons name="bookmark" size={30} color="#00E676" style={{ marginRight: 10 }} />
             <View>
               <Text style={styles.statValue}>{mostCommonTag.name.toUpperCase()}</Text>
               <Text style={styles.statCount}>Used in {mostCommonTag.count} {mostCommonTag.count === 1 ? 'entry' : 'entries'}</Text>
@@ -141,7 +147,7 @@ export default function StatsScreen() {
           </View>
         </View>
       </View>
-      
+
     </ScrollView>
   );
 }
@@ -149,7 +155,7 @@ export default function StatsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000', 
+    backgroundColor: '#000',
     padding: 16,
     paddingTop: 52,
   },
@@ -159,15 +165,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
   headerTitle: {
     fontSize: 26,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 20,
     textAlign: 'center',
   },
-  
-  
+
+
   timeSelector: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -193,8 +204,8 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: '700',
   },
-  
- 
+
+
   chartContainer: {
     backgroundColor: '#111',
     borderRadius: 12,
@@ -212,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'flex-end',
-    height: 100, 
+    height: 100,
     borderBottomWidth: 1,
     borderBottomColor: '#222',
     paddingBottom: 5,
@@ -226,7 +237,7 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 10,
   },
-  
+
 
   summaryCard: {
     backgroundColor: '#111',
@@ -236,7 +247,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderLeftWidth: 4,
-    borderLeftColor: '#2FE0C2', 
+    borderLeftColor: '#2FE0C2',
   },
   summaryText: {
     fontSize: 16,
@@ -245,8 +256,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
   },
-  
- 
+
+
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -254,7 +265,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   statsRow: {
-    flexDirection: 'column', 
+    flexDirection: 'column',
     justifyContent: 'space-between',
     marginBottom: 20,
   },
@@ -289,7 +300,7 @@ const styles = StyleSheet.create({
   },
   statCount: {
     fontSize: 12,
-    color: '#00E676', 
+    color: '#00E676',
   },
 });
 

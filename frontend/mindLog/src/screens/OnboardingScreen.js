@@ -36,7 +36,7 @@ const slides = [
     },
     {
         id: '4',
-        image:require('../assets/imageOne.jpg'),
+        image: require('../assets/imageOne.jpg'),
         title: 'Stay Consistent',
         description: 'Build healthy habits and maintain your mental wellness',
     },
@@ -82,12 +82,12 @@ const SlideItem = ({ item }) => {
                 },
             ]}
         >
-            
+
             <Animated.Image
-               
+
                 source={
-                    typeof item.image === 'string' 
-                        ? { uri: item.image } 
+                    typeof item.image === 'string'
+                        ? { uri: item.image }
                         : item.image
                 }
                 style={[
@@ -104,7 +104,7 @@ const SlideItem = ({ item }) => {
     );
 };
 
-const OnboardingScreen = ({ onFinish }) => {
+const OnboardingScreen = ({ navigation }) => {
     // Concept: useState
     // Current slide index track karne ke liye
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -123,7 +123,7 @@ const OnboardingScreen = ({ onFinish }) => {
                 // Agar last slide hai to onboarding finish karo
                 if (nextIndex >= slides.length) {
                     clearInterval(interval);
-                    onFinish();
+                    navigation.replace('UserInfo');
                     return prevIndex;
                 }
 
@@ -139,16 +139,16 @@ const OnboardingScreen = ({ onFinish }) => {
 
         // Cleanup function
         return () => clearInterval(interval);
-    }, [onFinish]);
+    }, [navigation]);
 
     // Skip button handler
     const handleSkip = () => {
-        onFinish();
+        navigation.replace('UserInfo');
     };
 
     // Get Started button handler (last slide par)
     const handleGetStarted = () => {
-        onFinish();
+        navigation.replace('UserInfo');
     };
 
     // Concept: onViewableItemsChanged

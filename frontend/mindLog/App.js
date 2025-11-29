@@ -1,33 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { Provider as PaperProvider } from 'react-native-paper';
-import SplashScreen from './src/screens/SplashScreen';
-import OnboardingScreen from './src/screens/OnboardingScreen';
 import AppNavigator from './src/navigation/AppNavigator';
 import { JournalProvider } from './src/context/JournalContext';
 
 export default function App() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(true);
-
-  const handleSplashFinish = () => {
-    setIsLoading(false);
-  };
-
-  const handleOnboardingFinish = () => {
-    setShowOnboarding(false);
-  };
-
-  if (isLoading) {
-    return <SplashScreen onFinish={handleSplashFinish} />;
-  }
-
-  if (showOnboarding) {
-    return <OnboardingScreen onFinish={handleOnboardingFinish} />;
-  }
-
   return (
     <PaperProvider>
       <JournalProvider>

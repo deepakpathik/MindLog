@@ -121,7 +121,7 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate("Calendar")}><Ionicons name="calendar-outline" size={22} color="#003E3E" /><Text style={styles.tabLabel}>Calendar</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.tab}><Ionicons name="ellipsis-horizontal" size={22} color="#003E3E" /><Text style={styles.tabLabel}>More</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate("More")}><Ionicons name="ellipsis-horizontal" size={22} color="#003E3E" /><Text style={styles.tabLabel}>More</Text></TouchableOpacity>
       </View>
 
     </View>

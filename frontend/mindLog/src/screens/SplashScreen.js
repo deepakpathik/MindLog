@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, Animated, Easing } from 'react-native';
 
 // Concept: Functional Component
 // Screen component jo splash screen display karega with smooth animations
-const SplashScreen = ({ onFinish }) => {
+const SplashScreen = ({ navigation }) => {
     // Concept: useRef for Animated Values
     // Animated values ko store karne ke liye useRef use karte hain
     // Ye values re-render ke baad bhi persist rahti hain
@@ -52,14 +52,14 @@ const SplashScreen = ({ onFinish }) => {
 
         // 3 seconds baad main screen par navigate karne ke liye
         const navigationTimeout = setTimeout(() => {
-            onFinish();
+            navigation.replace('Onboarding');
         }, 3000);
 
         // Cleanup function
         return () => {
             clearTimeout(navigationTimeout);
         };
-    }, [onFinish]);
+    }, [navigation]);
 
     // Rotation value ko degrees mein convert karna
     const rotation = rotateAnim.interpolate({
